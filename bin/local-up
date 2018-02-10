@@ -1,0 +1,31 @@
+#!/bin/bash
+echo "Checking for updates"
+# aws envs
+export AWS_ACCESS_KEY_ID=$(aws configure get aws_access_key_id 2> /dev/null || true)
+if [ -n "$AWS_ACCESS_KEY_ID" ]; then
+  export AWS_SECRET_ACCESS_KEY=$(aws configure get aws_secret_access_key 2> /dev/null || true)
+fi
+# docker login
+$(aws ecr get-login --no-include-email)
+# check github for updates to local-env
+git fetch
+read local_changes <<< $(git status --porcelain | wc -l)
+read remote_revs local_revs <<< $(git rev-list --left-right --count @{u}...HEAD)
+if [ "$remote_revs" != "0" ]; then
+    if [ "$local_revs" == "0" ] && [ "$local_changes" == "0" ]; then
+        echo "Updating local-env"
+        git pull
+    else
+        echo "local-env will not update due to local changes."
+    fi
+else
+    echo "local-env is ready!"
+fi
+# update infrastructure
+echo "Updating containers"
+docker-compose pull local-proxy # local-cassandra local-kafka local-elastic
+# start infrastructure containers
+echo "Creating containers"
+docker-compose up -d --remove-orphans local-proxy # local-cassandra local-kafka local-elastic
+# just sleeping to make sure everything is up
+echo -e "\nlocal-env is ready!"

@@ -1,0 +1,50 @@
+version: '2.1'
+
+services:
+  authentication-service:
+    image: "698990599346.dkr.ecr.us-east-1.amazonaws.com/authentication-service:latest"
+    container_name: "authentication-service"
+
+  user-service:
+    image: "698990599346.dkr.ecr.us-east-1.amazonaws.com/user-service:latest"
+    container_name: "user-service"
+
+###################################
+### Infrastructure Dependencies ###
+###################################
+  local-proxy:
+    container_name: local-proxy
+    image: nginx:alpine
+    volumes:
+      - ./nginx.conf:/etc/nginx/conf.d/default.conf
+    ports:
+      - 80:80
+
+  local-cassandra:
+    container_name: local-cassandra
+    image: cassandra:3.9
+    ports:
+      - 9042:9042
+    volumes:
+      - ~/data/cassandra/local-env:/var/lib/cassandra/
+
+  # local-kafka:
+  #   container_name: local-kafka
+  #   image: spotify/kafka
+  #   environment:
+  #     - ADVERTISED_HOST=local-kafka
+  #     - ADVERTISED_PORT=9092
+  #     - NUM_PARTITIONS=10
+  #   ports:
+  #     - 2181:2181
+  #     - 9092:9092
+
+  # local-elastic:
+  #   container_name: local-elastic
+  #   image: elasticsearch:5.1.1
+  #   command: elasticsearch -E cluster.name='local' -E network.host='local-elastic' -E network.bind_host='0.0.0.0'
+  #   volumes:
+  #     - ~/data/elastic/local-env:/user/share/elasticsearch/data
+  #   ports:
+  #     - 9200:9200
+  #     - 9300:9300
