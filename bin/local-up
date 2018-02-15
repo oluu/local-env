@@ -23,9 +23,9 @@ else
 fi
 # update infrastructure
 echo "Updating containers"
-docker-compose pull local-proxy # local-cassandra local-kafka local-elastic
+docker-compose pull local-proxy local-cassandra #local-kafka local-elastic
 # start infrastructure containers
 echo "Creating containers"
-docker-compose up -d --remove-orphans local-proxy # local-cassandra local-kafka local-elastic
+docker-compose up -d --remove-orphans local-proxy local-cassandra #local-kafka local-elastic
 # just sleeping to make sure everything is up
 echo -e "\nlocal-env is ready!"
