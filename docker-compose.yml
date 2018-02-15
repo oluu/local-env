@@ -8,6 +8,15 @@ services:
   user-service:
     image: "698990599346.dkr.ecr.us-east-1.amazonaws.com/user-service:latest"
     container_name: "user-service"
+    environment:
+      - PROTOCOL=http
+      - HOST=localhost
+      - PORT=3000
+      - CASSANDRA_KEYSPACE=user
+      - CASSANDRA_SERVICE_HOST=localhost
+      - CASSANDRA_SERVICE_PORT=9042
+      - CASSANDRA_USERNAME=cassandra
+      - CASSANDRA_PASSWORD=cassandra
 
 ###################################
 ### Infrastructure Dependencies ###
