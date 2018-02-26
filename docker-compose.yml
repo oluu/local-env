@@ -65,13 +65,3 @@ services:
       - 9042:9042
     volumes:
       - ~/data/cassandra/local-env:/var/lib/cassandra/
-
-  # elastic:
-  #   container_name: elastic
-  #   image: elasticsearch:5.1.1
-  #   command: elasticsearch -E cluster.name='local' -E network.host='local-elastic' -E network.bind_host='0.0.0.0'
-  #   volumes:
-  #     - ~/data/elastic/local-env:/user/share/elasticsearch/data
-  #   ports:
-  #     - 9200:9200
-  #     - 9300:9300
