@@ -59,7 +59,7 @@ services:
       - 4171:4171
 
   cassandra:
-    container_name: local-cassandra
+    container_name: cassandra
     image: cassandra:3.9
     ports:
       - 9042:9042
